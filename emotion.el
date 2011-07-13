@@ -51,11 +51,13 @@
   :group 'convenience)
 
 (defvar emotion-keys
-  (string-to-list "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,./;'`1234567890-=[]\\<>?:\"{}|~!@#$%^&*()_+"))
+  (string-to-list "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
 
 (defun emotion-get-visible-area (&optional start)
   (if start
-      (buffer-substring-no-properties start (window-end))
+      (if (> start (window-end))
+	  ""
+	(buffer-substring-no-properties start (window-end)))
   (buffer-substring-no-properties (window-start) (window-end))))
 
 (defun emotion-get-matches (char)

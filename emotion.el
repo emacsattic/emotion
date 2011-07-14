@@ -71,15 +71,15 @@
 
 (defun emotion-goto-match (key keys matches)
   "Goes to the specific character."
-  (goto-char (nth (cdr (assoc key keys)) matches)))
+  (ignore-errors (goto-char (nth (cdr (assoc key keys)) matches))))
 
 (defun emotion-set-overlay (pos char)
   (let ((o (make-overlay pos (+ 1 pos) (current-buffer) t)))
     (overlay-put o 'display (char-to-string char))
     (overlay-put o 'face '(:inverse-video t))))
 
-(defun emotion-place-overlays (char)
-  (loop for pos in (emotion-get-matches char)
+(defun emotion-place-overlays (matches)
+  (loop for pos in matches
 	for c in emotion-keys
 	do (emotion-set-overlay pos c)))
 
@@ -94,9 +94,10 @@
 
 (defun emotion-jump ()
   (interactive)
-  (let ((char (read-event "Search for character: " t)))
-    (emotion-place-overlays char)
-    (emotion-goto-match (read-event "Target key: " t) (emotion-collect-keys) (emotion-get-matches char))
+  (let* ((char (read-event "Search for character" t))
+	 (matches (emotion-get-matches char)))
+    (emotion-place-overlays matches)
+    (emotion-goto-match (read-event "Target key" t) (emotion-collect-keys) matches)
     (emotion-remove-overlays)))
 
 (provide 'emotion)

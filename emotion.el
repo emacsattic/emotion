@@ -69,10 +69,9 @@
       (setq start (+ 1 start (car (match-data)))))
     matches))
 
-(defun emotion-goto-match (key char)
+(defun emotion-goto-match (key keys matches)
   "Goes to the specific character."
-  (let ((keys (emotion-collect-keys)))
-    (goto-char (nth (cdr (assoc key keys)) (emotion-get-matches char)))))
+  (goto-char (nth (cdr (assoc key keys)) matches)))
 
 (defun emotion-set-overlay (pos char)
   (let ((o (make-overlay pos (+ 1 pos) (current-buffer) t)))
@@ -97,7 +96,7 @@
   (interactive)
   (let ((char (read-event "Search for character: " t)))
     (emotion-place-overlays char)
-    (emotion-goto-match (read-event "Target key: " t) char)
+    (emotion-goto-match (read-event "Target key: " t) (emotion-collect-keys) (emotion-get-matches char))
     (emotion-remove-overlays)))
 
 (provide 'emotion)

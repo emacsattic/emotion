@@ -82,6 +82,13 @@
 	for c across emotion-keys
 	do (emotion-set-overlay pos c)))
 
+;; (defun emotion-place-overlays (keychain)
+;;   (loop for key in keychain
+;; 	do (let ((o (make-overlay (cdr key) (+ 1 (cdr key))
+;; 				  (current-buffer) t)))
+;; 	     (overlay-put o 'display (char-to-string (car key)))
+;; 	     (overlay-put o 'face '(:inverse-video t)))))
+
 (defun emotion-remove-overlays ()
   (loop for o in (overlays-in 0 (buffer-end 1))
 	do (delete-overlay o)))

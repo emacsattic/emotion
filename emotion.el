@@ -79,7 +79,7 @@
 
 (defun emotion-place-overlays (matches)
   (loop for pos in matches
-	for c in emotion-keys
+	for c across emotion-keys
 	do (emotion-set-overlay pos c)))
 
 (defun emotion-remove-overlays ()

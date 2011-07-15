@@ -72,6 +72,9 @@
   "Goes to the specific character."
   (ignore-errors (goto-char (nth (cdr (assoc key keys)) matches))))
 
+(defun emotion-goto-char (key keychain)
+  (ignore-errors (goto-char (cdr (assoc key keychain)))))
+
 (defun emotion-set-overlay (pos char)
   (let ((o (make-overlay pos (+ 1 pos) (current-buffer) t)))
     (overlay-put o 'display (char-to-string char))

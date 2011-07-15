@@ -102,6 +102,7 @@
 	collect (cdr k) into matches
 	finally return matches))
 
+;;;###autoload
 (defun emotion-jump (char)
   "Main function for emotion. Bind to a key."
   (interactive "cJump to char")

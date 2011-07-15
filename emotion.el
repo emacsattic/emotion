@@ -99,6 +99,11 @@
 	  for k from 0 to (length matches)
 	  collect (cons (ring-ref keychain k) m))))
 
+(defun emotion-filter-keychain (key keychain)
+  (loop for k in keychain
+	if (equal key (car k))
+	collect k))
+
 (defun emotion-jump ()
   (interactive)
   (let* ((char (read-event "Search for character" t))

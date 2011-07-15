@@ -60,7 +60,7 @@
   (buffer-substring-no-properties (window-start) (window-end))))
 
 (defun emotion-get-matches (char)
-  "Gets a list for each position for the character given in the visible area."
+  "Gets a list of each position of each occurrence of char."
   (let ((matches '())
 	(start (window-start)))
     (while (string-match (regexp-quote (char-to-string char)) (emotion-get-visible-area start))
@@ -80,6 +80,7 @@
 	do (delete-overlay o)))
 
 (defun emotion-make-keychain (keys matches)
+  "Gives character from emotion-keys to each match position, reusing them if neccessary."
   (let ((keychain (make-ring (length keys))))
     (loop for k across keys do (ring-insert-at-beginning keychain k))
     (loop for m in matches
@@ -87,19 +88,19 @@
 	  collect (cons (ring-ref keychain k) m))))
 
 (defun emotion-filter-keychain (key keychain)
-  "Returns match postions with the given key."
+  "Returns match positions with the given key."
   (loop for k in keychain
 	if (equal key (car k))
 	collect k))
 
 (defun emotion-separate-keychain (keychain)
-  "Splits the keys from the match positions.
-Returns a cons with the car as the keys and the cdr as the match positions."
+  "Splits the keys from the match positions. Returns a list of the character positions."
   (loop for k in keychain
 	collect (cdr k) into matches
 	finally return matches))
 
 (defun emotion-jump ()
+  "Main function for emotion. Bind to a key."
   (interactive)
   (let* ((char (read-event "Search for character" t))
 	 (matches (emotion-get-matches char))

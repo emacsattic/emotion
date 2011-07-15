@@ -50,8 +50,7 @@
 (defgroup emotion nil "emotion customization group"
   :group 'convenience)
 
-(defvar emotion-keys
-  (string-to-list "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(defvar emotion-keys "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 (defun emotion-get-visible-area (&optional start)
   (if start
@@ -109,9 +108,8 @@
   "Splits the keys from the match positions.
 Returns a cons with the car as the keys and the cdr as the match positions."
   (loop for k in keychain
-	collect (car k) into keys
 	collect (cdr k) into matches
-	finally return (values keys matches)))
+	finally return matches))
 
 (defun emotion-jump ()
   (interactive)

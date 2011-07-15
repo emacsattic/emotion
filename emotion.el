@@ -106,7 +106,6 @@
 	 (matches (emotion-get-matches char))
 	 (keychain (emotion-make-keychain emotion-keys matches)))
     (if (= (length keychain) 0) (keyboard-quit))
-    (message "%d" (length keychain))
     (if (= (length keychain) 1)
 	(progn (ignore-errors (goto-char (cdr (assoc target keychain))))
 	       (keyboard-quit)))

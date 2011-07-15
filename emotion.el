@@ -100,9 +100,18 @@
 	  collect (cons (ring-ref keychain k) m))))
 
 (defun emotion-filter-keychain (key keychain)
+  "Returns match postions with the given key."
   (loop for k in keychain
 	if (equal key (car k))
 	collect k))
+
+(defun emotion-separate-keychain (keychain)
+  "Splits the keys from the match positions.
+Returns a cons with the car as the keys and the cdr as the match positions."
+  (loop for k in keychain
+	collect (car k) into keys
+	collect (cdr k) into matches
+	finally return (values keys matches)))
 
 (defun emotion-jump ()
   (interactive)

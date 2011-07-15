@@ -50,7 +50,10 @@
 (defgroup emotion nil "emotion customization group"
   :group 'convenience)
 
-(defvar emotion-keys "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+(defcustom emotion-keys "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  "Characters to use as target keys."
+  :type '(string)
+  :group 'emotion)
 
 (defun emotion-get-visible-area (&optional start)
   (if start

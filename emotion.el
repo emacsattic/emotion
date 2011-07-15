@@ -92,6 +92,13 @@
 	for k in emotion-keys
 	collect (cons k i)))
 
+(defun emotion-make-keychain (keys matches)
+  (let ((keychain (make-ring (length keys))))
+    (loop for k across keys do (ring-insert-at-beginning keychain k))
+    (loop for m in matches
+	  for k from 0 to (length matches)
+	  collect (cons (ring-ref keychain k) m))))
+
 (defun emotion-jump ()
   (interactive)
   (let* ((char (read-event "Search for character" t))

@@ -68,38 +68,16 @@
       (setq start (+ 1 start (car (match-data)))))
     matches))
 
-(defun emotion-goto-match (key keys matches)
-  "Goes to the specific character."
-  (ignore-errors (goto-char (nth (cdr (assoc key keys)) matches))))
-
-(defun emotion-goto-char (key keychain)
-  (ignore-errors (goto-char (cdr (assoc key keychain)))))
-
-(defun emotion-set-overlay (pos char)
-  (let ((o (make-overlay pos (+ 1 pos) (current-buffer) t)))
-    (overlay-put o 'display (char-to-string char))
-    (overlay-put o 'face '(:inverse-video t))))
-
-(defun emotion-place-overlays (matches)
-  (loop for pos in matches
-	for c across emotion-keys
-	do (emotion-set-overlay pos c)))
-
-;; (defun emotion-place-overlays (keychain)
-;;   (loop for key in keychain
-;; 	do (let ((o (make-overlay (cdr key) (+ 1 (cdr key))
-;; 				  (current-buffer) t)))
-;; 	     (overlay-put o 'display (char-to-string (car key)))
-;; 	     (overlay-put o 'face '(:inverse-video t)))))
+(defun emotion-place-overlays (keychain)
+  (loop for key in keychain
+	do (let ((o (make-overlay (cdr key) (+ 1 (cdr key))
+				  (current-buffer) t)))
+	     (overlay-put o 'display (char-to-string (car key)))
+	     (overlay-put o 'face '(:inverse-video t)))))
 
 (defun emotion-remove-overlays ()
   (loop for o in (overlays-in 0 (buffer-end 1))
 	do (delete-overlay o)))
-
-(defun emotion-collect-keys ()
-  (loop for i from 0 to (- (length emotion-keys) 1)
-	for k in emotion-keys
-	collect (cons k i)))
 
 (defun emotion-make-keychain (keys matches)
   (let ((keychain (make-ring (length keys))))
@@ -124,9 +102,19 @@ Returns a cons with the car as the keys and the cdr as the match positions."
 (defun emotion-jump ()
   (interactive)
   (let* ((char (read-event "Search for character" t))
-	 (matches (emotion-get-matches char)))
-    (emotion-place-overlays matches)
-    (emotion-goto-match (read-event "Target key" t) (emotion-collect-keys) matches)
+	 (matches (emotion-get-matches char))
+	 (keychain (emotion-make-keychain emotion-keys matches)))
+    (emotion-place-overlays keychain)
+    (setq target (read-event "Target key"))
+    (setq keychain (emotion-filter-keychain target keychain))
+    (while (< 1 (length keychain))
+      (emotion-remove-overlays)
+      (setq keychain (emotion-make-keychain emotion-keys
+					    (emotion-separate-keychain keychain)))
+      (emotion-place-overlays keychain)
+      (setq target (read-event "Target key"))
+      (setq keychain (emotion-filter-keychain target keychain)))
+    (ignore-errors (goto-char (cdr (assoc target keychain))))
     (emotion-remove-overlays)))
 
 (provide 'emotion)

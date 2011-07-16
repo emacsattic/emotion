@@ -1,13 +1,12 @@
 # Emotion for Emacs
 
-Emotion is a movement plugin, addon, package for Emacs that lets you
-move to a specific character in the currently visible area similar to
-Vim's [EasyMotion](http://www.vim.org/scripts/script.php?script_id=3526) plugin.
+A way to jump to specific characters in the currently visible area of a
+buffer similar to Vim's [EasyMotion](http://www.vim.org/scripts/script.php?script_id=3526) plugin.
 
-After installing and requiring it, bind `emotion-jump` to a key. When
-editing a text file press the key and enter a character to search
-for. Overlays will appear over each matching character showing which
-key you can press to jump to that specific character.
+After installing and requiring it, bind `emotion-jump` to a key. To
+use it, press your chosen key and type to character you want to jump
+to. All the characters that match the one that was typed will be
+highlighted with a letter so that you can type which one you want.
 
 <!-- Local Variables: -->
 <!-- mode: auto-fill -->

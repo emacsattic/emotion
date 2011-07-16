@@ -4,9 +4,9 @@
 ;;
 ;; Author: Rafael Sánchez-Aguilú
 ;; URL: https://github.com/rlph/emotion.el
-;; Version: 0.3
+;; Version: 0.5
 ;; Created: 2011-07-12
-;; Keywords: movement
+;; Keywords: movement convenience searching
 ;; License: GPL3
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -19,6 +19,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
+;;
+;; 0.5 - EasyMotion wannabe edition
+;;
+;;  - can now reuse keys if there are more candidates than keys
+;;  - doesn't bother with error messages when quitting after starting jump
+;;    sequence
 ;;
 ;; 0.3 - Initial release
 ;;
@@ -66,7 +72,9 @@
   "Gets a list of each position of each occurrence of char."
   (let ((matches '())
 	(start (window-start)))
-    (while (string-match (regexp-quote (char-to-string char)) (emotion-get-visible-area start))
+    (while (string-match
+	    (regexp-quote (char-to-string char))
+	    (emotion-get-visible-area start))
       (setq matches (append matches (list (+ start (car (match-data))))))
       (setq start (+ 1 start (car (match-data)))))
     matches))
@@ -85,7 +93,8 @@
 	do (delete-overlay o)))
 
 (defun emotion-make-keychain (keys matches)
-  "Gives character from emotion-keys to each match position, reusing them if neccessary."
+  "Gives character from emotion-keys to each match position
+reusing them if neccessary."
   (let ((keychain (make-ring (length keys))))
     (loop for k across keys do (ring-insert-at-beginning keychain k))
     (loop for m in matches
@@ -99,7 +108,8 @@
 	collect k))
 
 (defun emotion-separate-keychain (keychain)
-  "Splits the keys from the match positions. Returns a list of the character positions."
+  "Splits the keys from the match positions.
+Returns a list of the character positions."
   (loop for k in keychain
 	collect (cdr k) into matches
 	finally return matches))
@@ -111,7 +121,8 @@
   (let* ((char char)
 	 (matches (emotion-get-matches char))
 	 (keychain (emotion-make-keychain emotion-keys matches)))
-    (if (= (length keychain) 0) (keyboard-quit))
+    (if (= (length keychain) 0)
+	(keyboard-quit))
     (if (= (length keychain) 1)
 	(ignore-errors (goto-char (cdr (assoc target keychain))))
       (emotion-place-overlays keychain)
@@ -119,8 +130,9 @@
       (setq keychain (emotion-filter-keychain target keychain))
       (while (< 1 (length keychain))
 	(emotion-remove-overlays)
-	(setq keychain (emotion-make-keychain emotion-keys
-					      (emotion-separate-keychain keychain)))
+	(setq keychain (emotion-make-keychain
+			emotion-keys
+			(emotion-separate-keychain keychain)))
 	(emotion-place-overlays keychain)
 	(setq target (read-quoted-char))
 	(setq keychain (emotion-filter-keychain target keychain)))

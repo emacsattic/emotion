@@ -75,11 +75,13 @@
   (loop for key in keychain
 	do (let ((o (make-overlay (cdr key) (+ 1 (cdr key))
 				  (current-buffer) t)))
+	     (overlay-put o 'category 'emotion)
 	     (overlay-put o 'display (char-to-string (car key)))
 	     (overlay-put o 'face '(:inverse-video t)))))
 
 (defun emotion-remove-overlays ()
   (loop for o in (overlays-in 0 (buffer-end 1))
+	if (eq (overlay-get o 'category) 'emotion)
 	do (delete-overlay o)))
 
 (defun emotion-make-keychain (keys matches)

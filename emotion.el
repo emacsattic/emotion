@@ -2,7 +2,7 @@
 ;;
 ;; Copyright (C) 2011 Rafael Sánchez-Aguilú
 ;;
-;; Author: Rafael Sánchez-Aguilú
+;; Author: Rafael Sánchez-Aguilú <rafael@cornerdimension.com>
 ;; URL: https://github.com/rlph/emotion.el
 ;; Version: 0.5
 ;; Created: 2011-07-12

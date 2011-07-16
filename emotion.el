@@ -136,6 +136,7 @@ Returns a list of the character positions."
 	(emotion-place-overlays keychain)
 	(setq target (read-quoted-char))
 	(setq keychain (emotion-filter-keychain target keychain)))
+      (push-mark)
       (ignore-errors (goto-char (cdr (assoc target keychain))))
       (emotion-remove-overlays))))
 
